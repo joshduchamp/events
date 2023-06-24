@@ -3,9 +3,8 @@
     <fullName>Errors</fullName>
     <columns>CREATED_DATE</columns>
     <columns>NAME</columns>
-    <columns>Error_Message__c</columns>
-    <columns>Stack_Trace__c</columns>
     <columns>Type__c</columns>
+    <columns>Error_Message__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>Status__c</field>

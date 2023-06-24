@@ -20,6 +20,11 @@
                 <default>false</default>
                 <label>EvtFlowRunner</label>
             </value>
+            <value>
+                <fullName>EvtRecordFlowRunner</fullName>
+                <default>false</default>
+                <label>EvtRecordFlowRunner</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
