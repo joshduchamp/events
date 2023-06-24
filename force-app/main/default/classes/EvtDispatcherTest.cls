@@ -8,12 +8,13 @@ public class EvtDispatcherTest {
         eventList.add(new Generic_Event__e(Type__c = 'SampleApex', Data__c = JSON.serialize(msg)));
 
         Test.startTest();
-        EvtDispatcher.dispatchEvents(eventList);
+        TestLogger logger = new TestLogger();
+        EvtDispatcher dispatcher = new EvtDispatcher(logger);
+        dispatcher.dispatchEvents(eventList);
         Test.stopTest();
 
-        List<EvtLog__c> evtLogList = [SELECT Id, Status__c FROM EvtLog__c];
-        Assert.areEqual(1, evtLogList.size(), 'EvtLog not created');
-        Assert.areEqual('Success', evtLogList[0].Status__c);
+        Assert.areEqual(1, logger.savedLogs.size(), 'EvtLog not created');
+        Assert.areEqual('Success', logger.savedLogs[0].Status__c);
     }
 
     @IsTest
@@ -24,11 +25,20 @@ public class EvtDispatcherTest {
         eventList.add(new Generic_Event__e(Type__c = 'SampleFlow', Data__c = JSON.serialize(msg)));
 
         Test.startTest();
-        EvtDispatcher.dispatchEvents(eventList);
+        TestLogger logger = new TestLogger();
+        EvtDispatcher dispatcher = new EvtDispatcher(logger);
+        dispatcher.dispatchEvents(eventList);
         Test.stopTest();
 
-        List<EvtLog__c> evtLogList = [SELECT Id, Status__c FROM EvtLog__c];
-        Assert.areEqual(1, evtLogList.size(), 'EvtLog not created');
-        Assert.areEqual('Success', evtLogList[0].Status__c);
+        Assert.areEqual(1, logger.savedLogs.size(), 'EvtLog not created');
+        Assert.areEqual('Success', logger.savedLogs[0].Status__c);
+    }
+
+    private class TestLogger extends EvtLogger {
+        public List<EvtLog__c> savedLogs = new List<EvtLog__c>();
+
+        public override void saveLogs() {
+            savedLogs.addAll(this.logList);
+        }
     }
 }
