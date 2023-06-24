@@ -10,3 +10,7 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
+
+force-app/main/default/applications/standard__LightningBolt.app-meta.xml
+
+*.profile-meta.xml
