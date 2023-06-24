@@ -5,9 +5,12 @@ public abstract class EvtAbstractRecordHandler implements EvtHandlerInterface {
             rawMessageList += eventObj.Data__c;
         }
         rawMessageList = '[' + rawMessageList.removeEnd(',') + ']';
-        List<RecordInfo> infoList = (List<RecordInfo>) JSON.deserialize(rawMessageList, List<RecordInfo>.class);
+        List<EvtRecordInfo> infoList = (List<EvtRecordInfo>) JSON.deserialize(
+            rawMessageList,
+            List<EvtRecordInfo>.class
+        );
         EvtRecordContext ctx = new EvtRecordContext();
-        for (RecordInfo info : infoList) {
+        for (EvtRecordInfo info : infoList) {
             if (info.Record != null) {
                 ctx.newMap.put(info.Record.Id, info.Record);
             }
@@ -19,9 +22,4 @@ public abstract class EvtAbstractRecordHandler implements EvtHandlerInterface {
     }
 
     protected abstract void handle(EvtRecordContext ctx);
-
-    private class RecordInfo {
-        public SObject Record;
-        public SObject RecordPrior;
-    }
 }
