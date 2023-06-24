@@ -15,7 +15,7 @@
         <value xsi:type="xsd:string">EvtSampleFlowHandler</value>
     </values>
     <values>
-        <field>Handler_Type__c</field>
-        <value xsi:type="xsd:string">Flow</value>
+        <field>EvtRunner__c</field>
+        <value xsi:type="xsd:string">EvtFlowRunner</value>
     </values>
 </CustomMetadata>

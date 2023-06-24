@@ -8,41 +8,36 @@ public without sharing class EvtDispatcher {
     public void dispatchEvents(List<Generic_Event__e> eventList) {
         Map<String, List<Generic_Event__e>> eventMap = groupEventsByType(eventList);
         for (String eventType : eventMap.keySet()) {
-            try {
-                List<Generic_Event__e> myEventList = eventMap.get(eventType);
-                logger.buildLog(myEventList);
-                Event_Handler_Route__mdt route = Event_Handler_Route__mdt.getInstance(eventType);
-                if (route != null) {
-                    if (route.Active__c) {
-                        if (route.Handler_Type__c == 'Apex') {
-                            System.Type handlerClassType = Type.forName(route.Handler_Api_Name__c);
-                            EvtHandlerInterface handler = (EvtHandlerInterface) handlerClassType.newInstance();
-                            handler.execute(myEventList);
-                        } else if (route.Handler_Type__c == 'Flow') {
-                            for (Generic_Event__e eventObj : myEventList) {
-                                Map<String, Object> inputVariables = (Map<String, Object>) JSON.deserializeUntyped(
-                                    eventObj.Data__c
-                                );
-                                Flow.Interview flowInterview = Flow.Interview.createInterview(
-                                    route.Handler_Api_Name__c,
-                                    inputVariables
-                                );
-                                flowInterview.start();
-                            }
-                        } else {
-                            throw new EvtDispatchException('Invalid handler type: ' + route.Handler_Type__c);
-                        }
-                    } else {
-                        throw new EvtDispatchException('Route inactive for event type "' + eventType + '"');
-                    }
-                } else {
-                    throw new EvtDispatchException('Route not found for event type "' + eventType + '"');
-                }
-            } catch (Exception ex) {
-                logger.addException(ex);
-            }
+            dispatchByType(eventType, eventMap.get(eventType));
         }
         logger.saveLogs();
+    }
+
+    private void dispatchByType(String eventType, List<Generic_Event__e> eventList) {
+        try {
+            logger.buildLog(eventList);
+            Event_Handler_Route__mdt route = Event_Handler_Route__mdt.getInstance(eventType);
+            if (route != null) {
+                if (route.Active__c) {
+                    invokeRunner(route, eventList);
+                } else {
+                    throw new EvtException('Route inactive for event type "' + eventType + '"');
+                }
+            } else {
+                throw new EvtException('Route not found for event type "' + eventType + '"');
+            }
+        } catch (Exception ex) {
+            logger.addException(ex);
+        }
+    }
+
+    private static void invokeRunner(Event_Handler_Route__mdt route, List<Generic_Event__e> eventList) {
+        System.Type runnerType = Type.forName(route.EvtRunner__c);
+        EvtRunner runner = (EvtRunner) runnerType.newInstance();
+        EvtRunnerContext ctx = new EvtRunnerContext();
+        ctx.handlerApiName = route.Handler_Api_Name__c;
+        ctx.eventList = eventList;
+        runner.run(ctx);
     }
 
     private static Map<String, List<Generic_Event__e>> groupEventsByType(List<Generic_Event__e> eventList) {
@@ -56,8 +51,5 @@ public without sharing class EvtDispatcher {
             evtList.add(eventObj);
         }
         return eventMap;
-    }
-
-    public class EvtDispatchException extends Exception {
     }
 }

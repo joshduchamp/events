@@ -14,7 +14,11 @@ public class EvtDispatcherTest {
         Test.stopTest();
 
         Assert.areEqual(1, logger.savedLogs.size(), 'EvtLog not created');
-        Assert.areEqual('Success', logger.savedLogs[0].Status__c);
+        Assert.areEqual(
+            'Success',
+            logger.savedLogs[0].Status__c,
+            logger.savedLogs[0].Error_Message__c + ' ' + logger.savedLogs[0].Stack_Trace__c
+        );
     }
 
     @IsTest
@@ -31,7 +35,11 @@ public class EvtDispatcherTest {
         Test.stopTest();
 
         Assert.areEqual(1, logger.savedLogs.size(), 'EvtLog not created');
-        Assert.areEqual('Success', logger.savedLogs[0].Status__c);
+        Assert.areEqual(
+            'Success',
+            logger.savedLogs[0].Status__c,
+            logger.savedLogs[0].Error_Message__c + ' ' + logger.savedLogs[0].Stack_Trace__c
+        );
     }
 
     private class TestLogger extends EvtLogger {

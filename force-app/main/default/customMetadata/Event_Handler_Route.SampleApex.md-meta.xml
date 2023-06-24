@@ -15,7 +15,7 @@
         <value xsi:type="xsd:string">EvtSampleHandler</value>
     </values>
     <values>
-        <field>Handler_Type__c</field>
-        <value xsi:type="xsd:string">Apex</value>
+        <field>EvtRunner__c</field>
+        <value xsi:type="xsd:string">EvtApexRunner</value>
     </values>
 </CustomMetadata>
