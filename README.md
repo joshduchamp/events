@@ -9,7 +9,11 @@ Dynamically publish and handle platform events from flows or apex. With dynamic 
 
 ## Installation
 
-ToDo: installation instructions
+Go to https://login.salesforce.com/packaging/installPackage.apexp?p0=04t5G00000480n7QAA to install in production.
+
+Go to https://test.salesforce.com/packaging/installPackage.apexp?p0=04t5G00000480n7QAA to install in sandbox.
+
+Or clone the repository to deploy to your own org or scratch org.
 
 ## Getting Started
 
