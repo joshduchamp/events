@@ -51,7 +51,7 @@ When creating a flow to handle the event. Choose an Automated Flow and create th
 
 Register your flow handler so that it will fire when the event is published. Go to Setup > Custom Metadata Types and manage the `Event Handler Route` metadata. Choose **EvtFlowRunner** as the `EvtRunner`. This tells the system how to process the message to invoke the flow.
 
-## Publish Event with JSON
+### Publish Event with JSON
 
 Supply the data as a JSON object. The fields in the JSON object will be sent as variables to the flow that handles the event. It can also be processed by apex.
 
@@ -86,10 +86,12 @@ Handle the event
 
 ```apex
 public NameChangedHandler extends EvtAbstractHandler {
+    // This is needed to properly cast your message to the correct message type.
     protected override System.Type getMessageType() {
-        reutrn List<NameChanged>.class;
+        return List<NameChanged>.class;
     }
 
+    // This is where the actual processing of your message takes place.
     protected override void handle(List<Object> messageList) {
         for (NameChanged msg : (List<NameChanged>) messageList) {
             // do something
@@ -131,3 +133,27 @@ public class ContactUpdate extends EvtAbstractRecordHandler {
 
 Register your handler
 ![Creating metadata to map event to the handler your created](/markdown_content/registerContactUpdate.png)
+
+## Reporting and Administration
+
+### EvtAdmin App
+
+The EvtAdmin app offers a useful homepage for reporting and testing.
+
+-   See how breakdown of logs by type by day
+-   View errors by type and also a list of the most recent errors
+-   Flow for manually firing events for testing
+    -   **Type** The name of the event.
+    -   **Data** A JSON object of the message to be delivered.
+
+![EvtAdmin Home](/markdown_content/evtAdminApp.png)
+
+### EvtLogs
+
+From the EvtLog, you can see a full stack trace for errors. The message also appears in a flow on the right to be reprocessed.
+
+![EvtLog page](/markdown_content/evtLog.png)
+
+### That's too many logs!
+
+There is a flow called `EvtLogCleanup` that will run every morning to delete logs older than 7 days. This flow can be adjusted to delete on a more frequent basis.
