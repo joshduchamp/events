@@ -38,10 +38,6 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>AppSwitcher</members>
-        <name>AppMenu</name>
-    </types>
-    <types>
         <members>EvtAdmin</members>
         <name>CustomApplication</name>
     </types>
