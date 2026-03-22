@@ -83,7 +83,7 @@ NameChanged msg = new NameChanged();
 msg.oldName = 'Sam';
 msg.newName = 'notSam';
 
-Evt.publish('NameChanged', msg);
+Evt.publishAll('NameChanged', new List<Object>{ msg });
 ```
 
 Handle the event
@@ -113,10 +113,9 @@ Publish your event
 
 ```apex
 trigger ContactTrigger on Contact(after update) {
-    for (Contact con : (List<Contact>) Trigger.new) {
-        Contact oldCon = (Contact) Trigger.oldMap.get(con.Id);
-        Evt.publish('ContactUpdate', con, oldCon);
-    }
+    List<SObject> newList = new List<SObject>(Trigger.new);
+    List<SObject> oldList = new List<SObject>(Trigger.old);
+    Evt.publishAll('ContactUpdate', newList, oldList);
 }
 ```
 
