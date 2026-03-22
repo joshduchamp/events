@@ -20,7 +20,7 @@ public virtual class EvtLogger {
     // adds exception info to current log
     public virtual void addException(Exception ex) {
         currentLog.Status__c = 'Error';
-        currentLog.Error_Message__c = ex.getMessage();
+        currentLog.Error_Message__c = ex.getMessage() == null ? null : ex.getMessage().abbreviate(255);
         currentLog.Stack_Trace__c = ex.getStackTraceString();
     }
 
